@@ -1,0 +1,93 @@
+```{python}
+import nibabel as nib
+import matplotlib.pyplot as plt
+import numpy as np
+
+# --- Load NIfTI file ---
+nii_path = "atlas-train-dataset-1.0.1/train/labelsTr/lb0.nii.gz"  # or .nii
+img = nib.load(nii_path)
+data = img.get_fdata()  # Convert to NumPy array
+
+print("Image shape:", data.shape)
+
+# --- Display a middle slice ---
+slice_index = data.shape[2] // 2  # middle slice along z-axis
+plt.imshow(np.rot90(data[:, :, slice_index]), cmap="gray")
+plt.title(f"Slice {slice_index}")
+plt.axis("off")
+plt.show()
+
+import nibabel as nib
+import matplotlib.pyplot as plt
+import numpy as np
+
+img = nib.load("atlas-train-dataset-1.0.1/train/labelsTr/lb0.nii.gz")
+data = img.get_fdata()
+
+# Show middle slice
+slice_idx = data.shape[2] // 2
+plt.imshow(data[:, :, slice_idx], cmap="tab10", interpolation="nearest")
+plt.title("Multi-class segmentation")
+plt.colorbar(label="Label ID")
+plt.show()
+
+unique_vals = np.unique(data)
+print("Unique values:", unique_vals)
+
+```
+```{python}
+import nibabel as nib
+import matplotlib.pyplot as plt
+import numpy as np
+
+# --- Charger BOTH l'image originale ET les labels ---
+image_path = "atlas-train-dataset-1.0.1/train/imagesTr/im18.nii.gz"  # IMAGE ORIGINALE
+label_path = "atlas-train-dataset-1.0.1/train/labelsTr/lb18.nii.gz"  # LABELS/SEGMENTATION
+
+# Charger les données
+original_img = nib.load(image_path)
+label_img = nib.load(label_path)
+
+original_data = original_img.get_fdata()
+label_data = label_img.get_fdata()
+
+print("Original image shape:", original_data.shape)
+print("Label image shape:", label_data.shape)
+print("Unique label values:", np.unique(label_data))
+
+# --- Créer la superposition ---
+slice_idx = original_data.shape[2] // 2
+
+# Image originale (en niveaux de gris)
+original_slice = original_data[:, :, slice_idx]
+
+# Segmentation (seulement la classe 2 = tumeur)
+tumor_mask = (label_data[:, :, slice_idx] == 2)
+
+# Créer la figure
+plt.figure(figsize=(15, 5))
+
+# 1. Image originale seule
+plt.subplot(1, 3, 1)
+plt.imshow(np.rot90(original_slice), cmap="gray")
+plt.title("Image Originale")
+plt.axis("off")
+
+# 2. Segmentation seule
+plt.subplot(1, 3, 2)
+plt.imshow(np.rot90(tumor_mask), cmap="Reds")
+plt.title("Segmentation (Tumeur)")
+plt.axis("off")
+
+# 3. SUPERPOSITION
+plt.subplot(1, 3, 3)
+# Image en niveaux de gris
+plt.imshow(np.rot90(original_slice), cmap="gray", alpha=0.8)
+# Superposition en rouge (seulement où il y a une tumeur)
+plt.imshow(np.rot90(tumor_mask), cmap="Reds", alpha=0.6)
+plt.title("Image + Segmentation")
+plt.axis("off")
+
+plt.tight_layout()
+plt.show()
+```
