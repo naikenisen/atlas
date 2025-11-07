@@ -1,0 +1,9 @@
+atlas/
+├── models/
+│   ├── liver_segmentation.py    # Réseau 1: Segmentation du foie
+│   ├── tumor_segmentation.py    # Réseau 2: Segmentation de la tumeur
+│   └── two_stage_pipeline.py    # Pipeline complet
+├── weights/
+│   ├── best_liver_unet3d.pt     # Poids du réseau foie
+│   └── best_tumor_unet3d.pt     # Poids du réseau tumeur
+└── inference_two_stage.py       # Inférence complète
